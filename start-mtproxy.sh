@@ -68,37 +68,9 @@ sudo docker run -d \
 # Проверяем результат
 sleep 3
 if sudo docker ps | grep -q ${CONTAINER_NAME}; then
-    # Получаем IP сервера разными способами
-    echo -n "Определение IP сервера... "
+    SERVER_IP=$(curl -s ifconfig.me)
     
-    # Пробуем curl
-    if command -v curl &> /dev/null; then
-        SERVER_IP=$(curl -s ifconfig.me 2>/dev/null)
-    fi
-    
-    # Если curl не сработал, пробуем wget
-    if [ -z "$SERVER_IP" ] && command -v wget &> /dev/null; then
-        SERVER_IP=$(wget -qO- ifconfig.me 2>/dev/null)
-    fi
-    
-    # Если не сработало, пробуем через dig
-    if [ -z "$SERVER_IP" ] && command -v dig &> /dev/null; then
-        SERVER_IP=$(dig +short myip.opendns.com @resolver1.opendns.com 2>/dev/null)
-    fi
-    
-    # Если ничего не сработало, берем локальный IP
-    if [ -z "$SERVER_IP" ]; then
-        SERVER_IP=$(ip route get 1 | awk '{print $NF;exit}' 2>/dev/null)
-    fi
-    
-    # Если и это не сработало, ставим заглушку
-    if [ -z "$SERVER_IP" ]; then
-        SERVER_IP="IP_НЕ_ОПРЕДЕЛЕН"
-        echo -e "${YELLOW}предупреждение${NC}"
-    else
-        echo -e "${GREEN}готово${NC}"
-    fi
-    
+    echo -e "${GREEN}УСПЕШНО${NC}"
     echo ""
     echo "ИНФОРМАЦИЯ ДЛЯ ПОДКЛЮЧЕНИЯ:"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -107,15 +79,8 @@ if sudo docker ps | grep -q ${CONTAINER_NAME}; then
     echo "Секрет: ${SECRET}"
     echo "Fake TLS домен: ${FAKE_DOMAIN}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    
-    if [ "$SERVER_IP" != "IP_НЕ_ОПРЕДЕЛЕН" ]; then
-        echo "Ссылка для Telegram (нажмите для автоподключения):"
-        echo -e "${GREEN}tg://proxy?server=${SERVER_IP}&port=${PORT}&secret=${SECRET}${NC}"
-    else
-        echo -e "${YELLOW}Не удалось определить внешний IP сервера${NC}"
-        echo "Для подключения используйте внешний IP вашего сервера:"
-        echo -e "${GREEN}tg://proxy?server=ВАШ_ВНЕШНИЙ_IP&port=${PORT}&secret=${SECRET}${NC}"
-    fi
+    echo "Ссылка для Telegram (нажмите для автоподключения):"
+    echo -e "${GREEN}tg://proxy?server=${SERVER_IP}&port=${PORT}&secret=${SECRET}${NC}"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     
     # Сохраняем конфигурацию

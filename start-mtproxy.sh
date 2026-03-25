@@ -12,7 +12,7 @@ PORT="3443"
 FAKE_DOMAIN="mail.ru"
 
 echo "Запуск MTProto прокси с Fake TLS"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo -e "Используем домен: ${BLUE}${FAKE_DOMAIN}${NC}"
 
 # Генерируем секрет для Fake TLS

@@ -8,8 +8,8 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 CONTAINER_NAME="mtproto-proxy"
-PORT="443"
-FAKE_DOMAIN="ya.ru"
+PORT="3443"
+FAKE_DOMAIN="mail.ru"
 
 echo "Запуск MTProto прокси с Fake TLS"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
